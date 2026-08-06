@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13; 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { Math } from "@openzeppelin/contracts/utils/math/Math.sol"; 
 
 /**  
     @title Constant Product Automated Market Maker (CPAMM) contract
@@ -80,8 +81,8 @@ contract AMM {
     */
     function addLiquidity (uint256 _amount0, uint256 _amount1) external returns(uint256 shares) {
         require(_amount0 > 0 &&  _amount1 > 0, "INVALID AMOUNTS"); 
-        uint256 actual_amt0 = _amount0; 
-        uint256 actual_amt1 = _amount1; 
+        uint256 actual0 = _amount0; 
+        uint256 actual1 = _amount1; 
 
         if (totalLiquidity == 0) {
             shares = Math.sqrt(_amount0 * _amount1);
@@ -107,7 +108,7 @@ contract AMM {
         reserve1 += actual1; 
         totalLiquidity += shares; 
 
-        balanceOf[msg.sender] += shares; 
+        liquidityShares[msg.sender] += shares; 
 
         emit LiquidityAdded(msg.sender, actual0, actual1, shares); 
     } 
