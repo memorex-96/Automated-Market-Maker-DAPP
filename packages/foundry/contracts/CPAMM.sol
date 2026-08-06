@@ -79,7 +79,37 @@ contract AMM {
         @return shares The total numbner of LP shares minted to the user
     */
     function addLiquidity (uint256 _amount0, uint256 _amount1) external returns(uint256 shares) {
-        //TODO: Need to implement proportional mint logic
+        require(_amount0 > 0 &&  _amount1 > 0, "INVALID AMOUNTS"); 
+        uint256 actual_amt0 = _amount0; 
+        uint256 actual_amt1 = _amount1; 
+
+        if (totalLiquidity == 0) {
+            shares = Math.sqrt(_amount0 * _amount1);
+            require(shares > 0, "ZERO_SHARES"); 
+        } else {
+            uint256 optimal1 = (amount0 * reserve1) / reserve0;
+
+            if (optimal1 <= _amount1) {
+                actual1 = optimal1; 
+            } else {
+                uint256 optimal0 = (amount1 * reserve0) / reserve1;
+                require(optimal0 <= _amount0, "INSUFFICIENT AMOUNT_0");
+                actual0 = optimal0;   
+            }
+            shares = (actual0 * totalLiquidity) / reserve0; 
+        }
+        require(shares > 0, "INSUFFICIENT LIQUIDITY MINTED");
+
+        IERC20(token0).transferFrom(msg.sender, address(this), actual0);
+        IERC20(token1).transferFrom(msg.sender, address(this), actual1); 
+
+        reserve0 += actual0; 
+        reserve1 += actual1; 
+        totalLiquidity += shares; 
+
+        balanceOf[msg.sender] += shares; 
+
+        emit LiquidityAdded(msg.sender, actual0, actual1, shares); 
     } 
     
 
