@@ -120,8 +120,20 @@ contract AMM {
         @return amount0 The quantity of token0 returned to the user
         @return amount1 The quantity of token1 returned to the user
     */
-    function removeLiquidity (uint256 _shares) external returns (uint256 amount0, uint256 amount1) {
+    function removeLiquidity (uint256 _shares ) external returns (uint256 amount0, uint256 amount1) {
         //TODO: need to implement calc based on total share pool ratio 
+        uint256 bal0 = token0.balanceOf(address(this)); 
+        uint256 bal1 = token1.balanceOf(address(this)); 
+
+        amount0 = (_shares * bal0) / totalLiquidity; 
+        amount1 = (_shares * bal1) / totalLiquidity; 
+        require(amount0 > 0 && amount1 > 0, "amount0 or amount1 = 0"); 
+
+        _burn(msg.sender, _shares);
+        _update(bal0 - amount0, bal1 - amount1);
+
+        token0.transfer(msg.sender, amount0); 
+        token1.transfer(msg.sender, amount1);   
     }
 
     /**
