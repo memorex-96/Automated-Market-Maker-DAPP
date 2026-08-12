@@ -79,6 +79,11 @@ contract AMM {
         @param _amount1 Expected deposit amount for token1
         @return shares The total numbner of LP shares minted to the user
     */
+    /*
+        if totalLiquidity == 0 (no curr bal, need to init) -> sqrt(_amt0 * _amt1); 
+        else need to maintain balance proportion -> dx/dy == x/y 
+            dx/x = dy/y = minted_shares / total_supply
+    */ 
     function addLiquidity (uint256 _amount0, uint256 _amount1) external returns(uint256 shares) {
         require(_amount0 > 0 &&  _amount1 > 0, "INVALID AMOUNTS"); 
         uint256 actual0 = _amount0; 
@@ -121,7 +126,6 @@ contract AMM {
         @return amount1 The quantity of token1 returned to the user
     */
     function removeLiquidity (uint256 _shares ) external returns (uint256 amount0, uint256 amount1) {
-        //TODO: need to implement calc based on total share pool ratio 
         uint256 bal0 = token0.balanceOf(address(this)); 
         uint256 bal1 = token1.balanceOf(address(this)); 
 
@@ -145,5 +149,31 @@ contract AMM {
     */
     function swap (address _tokenIn, uint256 _amountIn) external returns(uint256 amountOut){
         //TODO: need to implement check for valid token, apply invariant formula, update internal reserves 
+        require(_tokenIn == address(token0) || _tokenIn == address(token1), "INVALID TOKEN"); 
+        require(_amountIn > 0, "AMOUNT IN = 0");
+
+        bool isToken0 = _tokenIn == address(token0);
+        (
+            IERC20 tokenIn, 
+            IERC20 tokenOut, 
+            uint reserveIn, 
+            uint reserveOut
+        ) = isToken0
+                ? (token0, token1, reserve0, reserve1)
+                : (token1, token0, reserve1, reserve0); 
+        
+        tokenIn.transferFrom(msg.sender, address(this), _amountIn);
+
+        uint amountInWithFee = (_amountIn * 997)/1000;
+        amountOut =
+            (reserveOut * amountInWithFee) /
+            (reserveIn + amountInWithFee);
+        
+        tokenOut.transferFrom(msg.sender, amountOut);
+
+        _update(
+            token0.balanceOf(address(this)), 
+            token1.balanceOf(address(this))
+        ); 
     }
 }
