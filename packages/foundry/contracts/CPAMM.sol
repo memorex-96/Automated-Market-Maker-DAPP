@@ -71,6 +71,13 @@ contract AMM {
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);  
     }
+    /**
+        @dev Internal helper func to sync stored reserves with real balances
+    */
+    function _update(uint256 _reserve0, uint256 _reserve1) private {
+        reserve0 = _reserve0; 
+        reserve1 = _reserve1; 
+    }
     
     /**
         @notice Adds Liquidity to the pool, minting LP tokens to the caller
@@ -93,12 +100,12 @@ contract AMM {
             shares = Math.sqrt(_amount0 * _amount1);
             require(shares > 0, "ZERO_SHARES"); 
         } else {
-            uint256 optimal1 = (amount0 * reserve1) / reserve0;
+            uint256 optimal1 = (_amount0 * reserve1) / reserve0;
 
             if (optimal1 <= _amount1) {
                 actual1 = optimal1; 
             } else {
-                uint256 optimal0 = (amount1 * reserve0) / reserve1;
+                uint256 optimal0 = (_amount1 * reserve0) / reserve1;
                 require(optimal0 <= _amount0, "INSUFFICIENT AMOUNT_0");
                 actual0 = optimal0;   
             }
@@ -115,7 +122,7 @@ contract AMM {
 
         liquidityShares[msg.sender] += shares; 
 
-        emit LiquidityAdded(msg.sender, actual0, actual1, shares); 
+        emit Mint(msg.sender, actual0, actual1, shares); 
     } 
     
 
@@ -126,6 +133,8 @@ contract AMM {
         @return amount1 The quantity of token1 returned to the user
     */
     function removeLiquidity (uint256 _shares ) external returns (uint256 amount0, uint256 amount1) {
+        require(liquidityShares[msg.sender] >= _shares, "INSUFFICIENT SHARES");
+        
         uint256 bal0 = token0.balanceOf(address(this)); 
         uint256 bal1 = token1.balanceOf(address(this)); 
 
@@ -133,8 +142,12 @@ contract AMM {
         amount1 = (_shares * bal1) / totalLiquidity; 
         require(amount0 > 0 && amount1 > 0, "amount0 or amount1 = 0"); 
 
-        _burn(msg.sender, _shares);
+        liquidityShares[msg.sender] -= _shares; 
+        totalLiquidity -= _shares; 
+
         _update(bal0 - amount0, bal1 - amount1);
+
+        emit Burn(msg.sender, amount0, amount1, _shares);
 
         token0.transfer(msg.sender, amount0); 
         token1.transfer(msg.sender, amount1);   
@@ -148,7 +161,7 @@ contract AMM {
         @return amountOut The net quantity of the target token set to the user
     */
     function swap (address _tokenIn, uint256 _amountIn) external returns(uint256 amountOut){
-        //TODO: need to implement check for valid token, apply invariant formula, update internal reserves 
+        
         require(_tokenIn == address(token0) || _tokenIn == address(token1), "INVALID TOKEN"); 
         require(_amountIn > 0, "AMOUNT IN = 0");
 
@@ -169,11 +182,13 @@ contract AMM {
             (reserveOut * amountInWithFee) /
             (reserveIn + amountInWithFee);
         
-        tokenOut.transferFrom(msg.sender, amountOut);
+        tokenOut.transfer(msg.sender, amountOut);
 
         _update(
             token0.balanceOf(address(this)), 
             token1.balanceOf(address(this))
         ); 
+
+        emit Swap(msg.sender, _tokenIn, _amountIn, amountOut); 
     }
 }
