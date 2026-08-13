@@ -3,8 +3,7 @@ pragma solidity ^0.8.19;
 
 import "./DeployHelpers.s.sol";
 import { DeployYourContract } from "./DeployYourContract.s.sol";
-import { unopCTScript } from "./unopCT.s.sol";
-
+import { CPAMMScript } from "./CPAMM.s.sol";
 /**
  * @notice Main deployment script for all contracts
  * @dev Run this when you want to deploy multiple contracts at once
@@ -17,15 +16,17 @@ contract DeployScript is ScaffoldETHDeploy {
     // Add new deployments here when needed
 
     
-    DeployYourContract deployYourContract = new DeployYourContract();
-    deployYourContract.run();
+    //DeployYourContract deployYourContract = new DeployYourContract();
+    //deployYourContract.run();
 
 
     // Deploy another contract
     // DeployMyContract myContract = new DeployMyContract();
     // myContract.run();
-    unopCTScript unopct = new unopCTScript();
-    unopct.run(); 
+    
+
+    CPAMMScript cpamm = new CPAMMScript(); 
+    cpamm.run(); 
      
   }
 }

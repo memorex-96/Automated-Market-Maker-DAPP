@@ -11,7 +11,7 @@ import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
         and k is a constant, during swaps. 
 */ 
 
-contract AMM {
+contract CPAMM {
     // ===================
     // STATE VARIABLES
     // ===================

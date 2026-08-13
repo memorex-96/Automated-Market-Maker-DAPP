@@ -1,0 +1,8 @@
+// SPDx-License-Identifier: MIT 
+pragma solidity ^0.8.13; 
+
+import "./MockERC20.sol";
+
+contract MockWETH is MockERC20 {
+    constructor() MockERC20("Wrapped Ether", "WETH") {}
+}

@@ -27,3 +27,8 @@ localhost.json
 
 # original Foundry README file 
 FoundryREADME.txt
+
+# Scaffold Tutorial Contract, Script, and Test
+/contracts/YourContract.sol 
+/script/DeployYourContract.s.sol
+/test/YourContract.t.sol
