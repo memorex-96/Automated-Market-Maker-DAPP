@@ -6,68 +6,42 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { PoolStats } from "~~/components/cpamm/PoolStats"; 
+import { connected } from "process";
+import { GlowingBackground } from "~~/components/background-wrappers/GlowingBackground";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const { targetNetwork } = useTargetNetwork();
 
   return (
-    <>
-      <div className="flex items-center flex-col grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} chain={targetNetwork} />
-          </div>
+    <GlowingBackground>
+      <div className="flex items-center flex-col grow pt-10 px-5">
+        <div className="hero bg-base-200/30 backdrop-blur-md border border-white/10 rounded-3xl p-8 max-w-5xl my-6 shadow-xl">
+          <div className="hero-content flex-col lg:flex-row justify-between w-full gap-8">
+            
+            {/** left */}
+              <div className="max-w-md">
+                <h1 className="text-4xl font-bold">CPAMM Protocol</h1>
+                <p className="py-4 text-base-content/80">
+                  An automated market maker for decentralized token liquidity. 
+                  Connect your wallet to deposit assets or execute instant swaps. 
+                </p>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="font-medium text-sm">Connected Address:</span>
+                  <Address address={connectedAddress} chain={targetNetwork} />
+                </div>
+              </div>
 
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
-
-        <div className="grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col md:flex-row">
-            <div className="flex flex-col bg-base-100 border border-base-300 px-10 py-10 text-center items-center max-w-xs">
-              <BugAntIcon className="h-8 w-8" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 border border-base-300 px-10 py-10 text-center items-center max-w-xs">
-              <MagnifyingGlassIcon className="h-8 w-8" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+            {/** right */}
+            <div className="flex flex-col items-center">
+              <h2 className="text-xl font-bold mb-3 text-purple-200">Live Pool Reserves</h2>
+              <PoolStats /> 
             </div>
           </div>
         </div>
       </div>
-    </>
+    </GlowingBackground>
   );
 };
 
