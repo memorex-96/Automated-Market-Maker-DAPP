@@ -8,4 +8,28 @@ Welcome to my **Constant Product Automated Market Maker (CPAMM)** DApp! This pro
 * **Real-Time Analytics Dashboard:** Interactive React interface displaying the live pool reserves ($x$ and $y$).  
 * **Comprehensive Test Suite:** Fully covered smart contract logic written in Foundry, validating share minting ratios, zero-amount reverts, and reserve updates. 
 
+### Tech Stack 
+* **Smart Contracts:** Solidity, Foundry (Forge and Anvil)
+* **Frontend:** Next.js, React, TypeScript
+* **Web3 Libraries:** Scaffold-Eth 2, Wagmi, Viem, RainbowKit
+* **Styling:** Tailwind CSS, DaisyUI
 
+### Quick Start Guide
+* **Clone and install dependencies** 
+```sh 
+    git clone https://github.com/memorex-96/Automated-Market-Maker-DAPP.git
+    cd evm-sandbox 
+    yarn install
+```
+* **Start Local Blockchain**
+```sh
+    yarn chain
+```
+* **Deploy Contract to Local Network**
+```sh
+    yarn deploy
+```
+* **Launch Frontend Interface**
+```sh
+    yarn start
+```
