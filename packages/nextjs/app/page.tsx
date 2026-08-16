@@ -40,6 +40,11 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
+        <div className="hero bg-base-200/30 backdrop-blur-md border border-white/10 rounded-3xl p-8 max-w-5xl my-6 shadow-xl">
+          <div className="hero-content flex-col lg:flex-row justify-between w-full gap-8">
+            {/** Liquidity pool input fields */}
+          </div>  
+        </div>
       </div>
     </GlowingBackground>
   );

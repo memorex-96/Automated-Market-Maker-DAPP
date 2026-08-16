@@ -8,7 +8,7 @@ import { hardhat } from "viem/chains";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
-
+import { GlowingBackground } from "./background-wrappers/GlowingBackground";
 type HeaderMenuLink = {
   label: string;
   href: string;
