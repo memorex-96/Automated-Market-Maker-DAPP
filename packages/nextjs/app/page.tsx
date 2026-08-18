@@ -9,6 +9,7 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { PoolStats } from "~~/components/cpamm/PoolStats"; 
 import { connected } from "process";
 import { GlowingBackground } from "~~/components/background-wrappers/GlowingBackground";
+import { WriteStateFuncs } from "~~/components/cpamm/WriteStateFuncs";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
@@ -43,6 +44,7 @@ const Home: NextPage = () => {
         <div className="hero bg-base-200/30 backdrop-blur-md border border-white/10 rounded-3xl p-8 max-w-5xl my-6 shadow-xl">
           <div className="hero-content flex-col lg:flex-row justify-between w-full gap-8">
             {/** Liquidity pool input fields */}
+            <WriteStateFuncs/> 
           </div>  
         </div>
       </div>
