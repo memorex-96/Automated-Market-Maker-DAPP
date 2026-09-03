@@ -48,7 +48,9 @@ export const Footer = () => {
           <div className="flex justify-center items-center gap-2 text-sm w-full">
             <div className="text-center">
               <p className="m-0 text-center">
-                About Me
+                <a href="https://www.linkedin.com/in/carson-crowley-059752288" target="_blank" rel="noreference" className="link"> 
+                  About Me
+                </a>
               </p> 
             </div>
             <span>·</span>
