@@ -1,10 +1,15 @@
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useState } from "react";
 import { parseEther } from "viem";
+import { Address } from "viem";
 
 export const WriteStateFuncs = () => {
     const [usr_amt0, setUsrAmt0] = useState("");
     const [usr_amt1, setUsrAmt1] = useState(""); 
+    const [amtIn, setAmtIn] = useState(""); 
+    const [usr_shares, setUserShares] = useState<string | null>(null);
+    const [coin_adr, setCoinAddress] = useState(""); 
+     
 
     const { writeContractAsync, isPending } = useScaffoldWriteContract({
         contractName: "CPAMM"
@@ -26,11 +31,29 @@ export const WriteStateFuncs = () => {
     }
 
     const handleRemoveLiquidity = async () => {
-
+        if (!usr_shares) return; 
+        try {
+            await writeContractAsync({
+                functionName: "removeLiquidity", 
+                args: [parseEther(usr_shares)],
+            });
+            setUserShares(""); 
+        } catch(e) {
+            console.error("Error removing liquidity: ", e);
+        }
     }
 
     const handleSwapLiquidity = async () => {
-
+        try {
+            {/** Call SwapLiquidity func, need to assign coin wallet addresses */}
+            await writeContractAsync({
+                functionName: "swap",
+                args: [coin_adr, parseEther(amtIn)],
+            }); 
+            setCoinAddress(""); 
+        } catch (e) {
+            console.error("Error swapping: ", e);
+        }
     }
 
 
@@ -64,6 +87,41 @@ export const WriteStateFuncs = () => {
                     {isPending ? "Confirming..." : "Add Liquidity"}
                 </button>
             </div> 
+            <h3 className="font-bold text-lg">Remove Liquidity</h3>
+            <div className="flex flex-col gap-3">
+                {/**Token0 AMT input */}
+                {/**Submit */}
+                <button
+                    onClick={handleRemoveLiquidity}
+                    disabled={isPending || !usr_shares}
+                    className="btn btn-primary w-full">
+                        {isPending ? "Confirnimg" : "Remove Liquidity"}
+                </button>
+            </div>
+            <h3 className="font-bold text-lg">Swap</h3>
+            <div className="flex flex-col gap-3">
+                {/** Coin in*/}
+                <input
+                    type="address"
+                    placeholder="Coin Address"
+                    value={coin_adr}
+                    onChange={(e) => setCoinAddress(e.target.value)}
+                    className="input input-bordered w-full"/>
+                {/** AmountIn */}
+                <input
+                    type="number"
+                    placeholder="Amount Being traded"
+                    value={amtIn}
+                    onChange={(e) => setAmtIn(e.target.value)}
+                    className="input input-bordered w-full"/>
+                {/** Submit button */}
+                <button
+                    onClick={handleSwapLiquidity}
+                    disabled={isPending}
+                    className="btn btn-primary w-full">
+                        {isPending ? "Confirming" : "Swap Liquidity"}
+                </button>
+            </div>
         </div>
     );
 } 
