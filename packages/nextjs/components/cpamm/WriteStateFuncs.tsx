@@ -99,6 +99,7 @@ export const WriteStateFuncs = () => {
                 </button>
             </div>
             <h3 className="font-bold text-lg">Swap</h3>
+            {/** 100% needs rework after testing */}
             <div className="flex flex-col gap-3">
                 {/** Coin in*/}
                 <input
