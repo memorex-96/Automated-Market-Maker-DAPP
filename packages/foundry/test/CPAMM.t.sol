@@ -31,15 +31,21 @@ contract CPAMMTest is Test {
     // FUNCTION TESTS
     // ================
 
+    /**
+        @notice The minting of shares comes as the most important aspect. 
+        @dev Testing actual share minting. 
+     */
     function testAddLiquidity() public view { 
+        uint256 mnt_shares = cpamm.addLiquidity(_amount0, _amount1);
+        assert(); 
 
     }   
 
     function testRemoveLiquidity() public view {
-
+        // cpamm.removeLiquidity(_shares);
     }
 
     function testSwapLiquidity() public view {
-        
+        // cpamm.swap(_tokenIn, _amountIn);
     }
 }
