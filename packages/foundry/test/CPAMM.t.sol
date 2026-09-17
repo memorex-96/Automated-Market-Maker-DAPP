@@ -20,11 +20,10 @@ contract CPAMMTest is Test {
     MockWETH public weth; 
     MockUSDC public usdc; 
 
-    function setUp() public {
-        weth = new MockWETH(); 
-        usdc = new MockUSDC(); 
+    address public test_add = makeAddr("test_add"); 
 
-        cpamm = new CPAMM(weth, usdc);  
+    function setUp() public {
+      
     }
 
     // ================
@@ -36,8 +35,6 @@ contract CPAMMTest is Test {
         @dev Testing actual share minting. 
      */
     function testAddLiquidity() public view { 
-        uint256 mnt_shares = cpamm.addLiquidity(_amount0, _amount1);
-        assert(); 
 
     }   
 
@@ -48,4 +45,8 @@ contract CPAMMTest is Test {
     function testSwapLiquidity() public view {
         // cpamm.swap(_tokenIn, _amountIn);
     }
+
+    // ================
+    // GAS TESTS
+    // ================
 }

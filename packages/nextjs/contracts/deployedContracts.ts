@@ -680,7 +680,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 2,
+      deployedOnBlock: 1,
     },
     CPAMM: {
       address: "0xe1aa25618fa0c7a1cfdab5d6b456af611873b629",
@@ -952,7 +952,7 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 2,
+      deployedOnBlock: 1,
     },
   },
 } as const;
